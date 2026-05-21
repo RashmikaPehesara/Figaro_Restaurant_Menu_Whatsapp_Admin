@@ -21,8 +21,10 @@ export default function AdminLayout({ children }) {
       ) : (
         <div className="min-h-screen bg-[#0a0a0a] text-white flex">
           <Sidebar />
-          <main className="flex-1 lg:pl-72 p-6 pt-20 lg:pt-8 min-h-screen overflow-y-auto w-full">
-            {children}
+          <main className="flex-1 lg:pl-72 pt-20 lg:pt-8 min-h-screen overflow-y-auto w-full">
+            <div className="p-6 lg:px-12 lg:py-6 xl:px-16 w-full">
+              {children}
+            </div>
           </main>
         </div>
       )}
