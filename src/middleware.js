@@ -4,7 +4,7 @@ import NextAuth from "next-auth";
 // like mongodb or bcrypt reach the Edge Runtime through middleware.
 const authConfig = {
   pages: {
-    signIn: "/admin",
+    signIn: "/adminfigaro",
   },
   callbacks: {
     async jwt({ token, user }) {
@@ -23,15 +23,15 @@ const authConfig = {
     },
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
-      const isAdminRoute = nextUrl.pathname.startsWith("/admin");
-      const isLoginPage = nextUrl.pathname === "/admin";
+      const isAdminRoute = nextUrl.pathname.startsWith("/adminfigaro");
+      const isLoginPage = nextUrl.pathname === "/adminfigaro";
 
       if (isAdminRoute) {
         if (isLoginPage) {
-          if (isLoggedIn) return Response.redirect(new URL("/admin/dashboard", nextUrl));
+          if (isLoggedIn) return Response.redirect(new URL("/adminfigaro/dashboard", nextUrl));
           return true;
         }
-        if (!isLoggedIn) return false; // This will redirect to pages.signIn (/admin)
+        if (!isLoggedIn) return false; // This will redirect to pages.signIn (/adminfigaro)
         return true;
       }
       return true;

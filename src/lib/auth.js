@@ -7,7 +7,7 @@ import Admin from "@/models/Admin";
 // Full configuration for Node.js runtime (API routes, Server Actions)
 export const { handlers, auth, signIn, signOut } = NextAuth({
   pages: {
-    signIn: "/admin",
+    signIn: "/adminfigaro",
   },
   callbacks: {
     async jwt({ token, user }) {

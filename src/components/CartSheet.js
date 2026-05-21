@@ -10,7 +10,7 @@ import { usePathname } from "next/navigation";
 
 export function CartSheet() {
   const pathname = usePathname();
-  const isAdmin = pathname?.startsWith("/admin");
+  const isAdmin = pathname?.startsWith("/adminfigaro");
 
   const clientData = useData();
   const {

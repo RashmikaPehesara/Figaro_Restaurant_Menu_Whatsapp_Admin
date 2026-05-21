@@ -8,7 +8,7 @@ import { usePathname } from "next/navigation";
 export function FloatingCartButton() {
   const { totalItems, setIsCartOpen } = useCart();
   const pathname = usePathname();
-  const isAdmin = pathname?.startsWith("/admin");
+  const isAdmin = pathname?.startsWith("/adminfigaro");
 
   if (isAdmin) return null;
 

@@ -20,13 +20,13 @@ import { useState } from "react";
 import { signOut } from "next-auth/react";
 
 const navItems = [
-  { label: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
-  { label: "Foods", href: "/admin/foods", icon: UtensilsCrossed },
-  { label: "Categories", href: "/admin/categories", icon: Layers },
-  { label: "Offers", href: "/admin/offers", icon: TicketPercent },
-  { label: "Gallery", href: "/admin/gallery", icon: ImageIcon },
-  { label: "Settings", href: "/admin/settings", icon: Settings },
-  { label: "Security", href: "/admin/security", icon: Shield },
+  { label: "Dashboard", href: "/adminfigaro/dashboard", icon: LayoutDashboard },
+  { label: "Foods", href: "/adminfigaro/foods", icon: UtensilsCrossed },
+  { label: "Categories", href: "/adminfigaro/categories", icon: Layers },
+  { label: "Offers", href: "/adminfigaro/offers", icon: TicketPercent },
+  { label: "Gallery", href: "/adminfigaro/gallery", icon: ImageIcon },
+  { label: "Settings", href: "/adminfigaro/settings", icon: Settings },
+  { label: "Security", href: "/adminfigaro/security", icon: Shield },
 ];
 
 export default function Sidebar() {
@@ -65,7 +65,7 @@ export default function Sidebar() {
       >
         {/* Header */}
         <div className="p-6 flex items-center justify-between">
-          <Link href="/admin/dashboard" onClick={() => setIsMobileOpen(false)} className={`font-bold text-white transition-all overflow-hidden ${isCollapsed ? 'w-0' : 'w-auto'}`}>
+          <Link href="/adminfigaro/dashboard" onClick={() => setIsMobileOpen(false)} className={`font-bold text-white transition-all overflow-hidden ${isCollapsed ? 'w-0' : 'w-auto'}`}>
             <span className="text-2xl tracking-tighter">FIGARO<span className="text-orange-500">.</span></span>
           </Link>
           <div className="flex items-center">

@@ -29,7 +29,7 @@ export default function AdminLoginPage() {
         toast.error("Invalid email or password");
       } else {
         toast.success("Login successful!");
-        router.push("/admin/dashboard");
+        router.push("/adminfigaro/dashboard");
       }
     } catch (error) {
       toast.error("Something went wrong. Please try again.");

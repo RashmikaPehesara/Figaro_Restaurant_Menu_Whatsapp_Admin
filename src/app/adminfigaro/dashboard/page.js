@@ -25,7 +25,7 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     if (status === "unauthenticated") {
-      router.push("/admin");
+      router.push("/adminfigaro");
       return;
     }
 
@@ -107,21 +107,21 @@ export default function AdminDashboard() {
   const quickActions = [
     {
       label: "Add New Food",
-      href: "/admin/foods",
+      href: "/adminfigaro/foods",
       iconBg: "bg-orange-500/20",
       iconColor: "text-orange-500",
       icon: UtensilsCrossed,
     },
     {
       label: "Add Category",
-      href: "/admin/categories",
+      href: "/adminfigaro/categories",
       iconBg: "bg-blue-500/20",
       iconColor: "text-blue-400",
       icon: Layers,
     },
     {
       label: "Create Offer",
-      href: "/admin/offers",
+      href: "/adminfigaro/offers",
       iconBg: "bg-purple-500/20",
       iconColor: "text-purple-400",
       icon: TicketPercent,
