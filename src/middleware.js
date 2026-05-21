@@ -1,48 +1,35 @@
 import NextAuth from "next-auth";
 
-// We define the config inline to ABSOLUTELY ensure no accidental imports of Node.js modules
-// like mongodb or bcrypt reach the Edge Runtime through middleware.
 const authConfig = {
   pages: {
-    signIn: "/adminfigaro",
+    signIn: "/adminfigaro/login",
   },
   callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id;
-        token.restaurantId = user.restaurantId;
-      }
-      return token;
-    },
-    async session({ session, token }) {
-      if (token && session.user) {
-        session.user.id = token.id;
-        session.user.restaurantId = token.restaurantId;
-      }
-      return session;
-    },
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
       const isAdminRoute = nextUrl.pathname.startsWith("/adminfigaro");
-      const isLoginPage = nextUrl.pathname === "/adminfigaro";
+      const isLoginPage = 
+        nextUrl.pathname === "/adminfigaro/login" || 
+        nextUrl.pathname === "/adminfigaro";
 
       if (isAdminRoute) {
         if (isLoginPage) {
-          if (isLoggedIn) return Response.redirect(new URL("/adminfigaro/dashboard", nextUrl));
+          if (isLoggedIn) {
+            return Response.redirect(new URL("/adminfigaro/dashboard", nextUrl));
+          }
           return true;
         }
-        if (!isLoggedIn) return false; // This will redirect to pages.signIn (/adminfigaro)
+        if (!isLoggedIn) return false; // Redirect to pages.signIn (/adminfigaro/login)
         return true;
       }
       return true;
     },
   },
-  providers: [], // Providers are added in auth.js, not here
+  providers: [],
 };
 
 export default NextAuth(authConfig).auth;
 
 export const config = {
-  // https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher
-  matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'],
+  matcher: ["/adminfigaro/:path*"],
 };
