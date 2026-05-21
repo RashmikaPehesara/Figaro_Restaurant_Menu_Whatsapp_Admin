@@ -1,0 +1,31 @@
+"use client";
+
+import { usePathname } from "next/navigation";
+import Sidebar from "@/components/admin/Sidebar";
+import { Providers } from "@/components/admin/Providers";
+
+export default function AdminLayout({ children }) {
+  const pathname = usePathname();
+  
+  // Auth pages do not display sidebar layout
+  const isAuthPage = 
+    pathname === "/admin" || 
+    pathname === "/admin/login";
+
+  return (
+    <Providers>
+      {isAuthPage ? (
+        <div className="min-h-screen bg-[#0a0a0a] text-white flex items-center justify-center p-4">
+          {children}
+        </div>
+      ) : (
+        <div className="min-h-screen bg-[#0a0a0a] text-white flex">
+          <Sidebar />
+          <main className="flex-1 lg:pl-72 p-6 pt-20 lg:pt-8 min-h-screen overflow-y-auto w-full">
+            {children}
+          </main>
+        </div>
+      )}
+    </Providers>
+  );
+}

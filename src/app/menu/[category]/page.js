@@ -1,6 +1,7 @@
 "use client";
 
 import { clientData } from "@/data/clientData";
+import { useData } from "@/context/DataContext";
 import { ArrowLeft, Plus } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -13,8 +14,13 @@ import { motion, AnimatePresence } from "framer-motion";
 export default function CategoryItemsPage() {
   const params = useParams();
   const categoryId = params.category;
-  const category = clientData.categories.find(c => c.id === categoryId);
-  const items = clientData.items.filter(i => i.categoryId === categoryId);
+  const clientData = useData();
+  
+  const safeCategories = Array.isArray(clientData?.categories) ? clientData.categories : [];
+  const safeItems = Array.isArray(clientData?.items) ? clientData.items : [];
+  
+  const category = safeCategories.find(c => c?.id === categoryId);
+  const items = safeItems.filter(i => i?.categoryId === categoryId);
   
   if (!category) {
     return notFound();
@@ -47,7 +53,7 @@ function CategoryItemsView({ category, items }) {
 
       {items.length === 0 ? (
          <div className="text-center py-20 text-muted-foreground font-medium">No items found in this category.</div>
-      ) : (
+      ) : clientData?.features?.showItemImages ? (
         <motion.div 
           className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 items-start"
           variants={container}
@@ -59,6 +65,22 @@ function CategoryItemsView({ category, items }) {
               key={item.id} 
               item={item} 
               onImageClick={() => setSelectedImage({ src: item.image, alt: item.name })}
+              addToCart={addToCart}
+            />
+          ))}
+        </motion.div>
+      ) : (
+        <motion.div
+          className="flex flex-col rounded-3xl overflow-hidden border border-zinc-800/80 divide-y divide-zinc-800/80 bg-black shadow-md"
+          variants={container}
+          initial="hidden"
+          animate="show"
+        >
+          {items.map((item, index) => (
+            <ItemRow
+              key={item.id}
+              item={item}
+              index={index}
               addToCart={addToCart}
             />
           ))}
@@ -85,7 +107,91 @@ function CategoryItemsView({ category, items }) {
   );
 }
 
+function ItemRow({ item, index, addToCart }) {
+  const clientData = useData();
+  const [selectedSize, setSelectedSize] = useState(item.pricing.type === "multi" ? item.pricing.options[0] : null);
+  const [isAdding, setIsAdding] = useState(false);
+
+  const handleAdd = () => {
+    setIsAdding(true);
+    addToCart(item, selectedSize ? { name: selectedSize.label, price: selectedSize.price } : null, 1);
+    setTimeout(() => setIsAdding(false), 300);
+  };
+
+  const currentPrice = item.pricing.type === "single" ? item.pricing.price : selectedSize.price;
+
+  return (
+    <motion.div
+      variants={{ hidden: { opacity: 0, y: 10 }, show: { opacity: 1, y: 0 } }}
+      className={`px-5 py-5 flex items-center justify-between border-b border-zinc-800/80 transition-all ${
+        index % 2 === 0 ? "bg-black" : "bg-zinc-900"
+      }`}
+    >
+      <div className="flex-1 min-w-0 pr-4">
+        {/* Title and Badges */}
+        <div className="flex items-center gap-2 flex-wrap">
+          <h3 className="font-extrabold text-base md:text-lg leading-tight text-white">
+            {item.name}
+          </h3>
+          {(item.popular || item.featured) && (
+            <span className="px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-orange-500 bg-orange-500/10 border border-orange-500/20 rounded-md shrink-0">
+              Popular
+            </span>
+          )}
+        </div>
+
+        {/* Description */}
+        {clientData.features.showDescription && item.description && (
+          <p className="text-xs md:text-sm text-zinc-400 mt-1 line-clamp-2 max-w-xl md:max-w-2xl leading-relaxed">
+            {item.description}
+          </p>
+        )}
+
+        {/* Price & Multi-pricing Selector */}
+        <div className="flex flex-wrap items-center gap-3 md:gap-4 mt-2.5">
+          <span className="text-primary font-bold text-base md:text-lg tracking-wide font-sans tabular-nums">
+            {clientData.currency} {Number(currentPrice).toLocaleString("en-LK", {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+          </span>
+
+          {item.pricing.type === "multi" && (
+            <div className="flex flex-wrap gap-1.5">
+              {item.pricing.options.map((opt) => (
+                <button
+                  key={opt.label}
+                  onClick={() => setSelectedSize(opt)}
+                  className={`px-2.5 py-1 text-[11px] font-bold rounded-full transition-all active:scale-95 ${
+                    selectedSize?.label === opt.label
+                      ? "bg-primary text-primary-foreground shadow-sm shadow-primary/30"
+                      : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700"
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Add Button */}
+      <motion.button
+        onClick={handleAdd}
+        whileTap={{ scale: 0.8 }}
+        animate={isAdding ? { scale: [1, 1.2, 1] } : {}}
+        transition={{ duration: 0.3 }}
+        className={`ml-4 w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center transition-all shadow-md shrink-0 ${
+          isAdding ? "bg-primary text-primary-foreground" : "bg-zinc-800 hover:bg-zinc-700 hover:text-white text-zinc-300 active:scale-95"
+        }`}
+        aria-label="Add to cart"
+      >
+        <Plus size={22} strokeWidth={2.5} />
+      </motion.button>
+    </motion.div>
+  );
+}
+
 function ItemCard({ item, onImageClick, addToCart }) {
+  const clientData = useData();
   const [selectedSize, setSelectedSize] = useState(item.pricing.type === "multi" ? item.pricing.options[0] : null);
   const [isAdding, setIsAdding] = useState(false);
   

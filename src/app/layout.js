@@ -6,6 +6,7 @@ const rubik = Rubik({
   weight: ['400', '500', '600', '700'],
   variable: '--font-rubik'
 });
+import { DataProvider } from "@/context/DataContext";
 import { CartProvider } from "@/context/CartContext";
 import { FloatingCartButton } from "@/components/FloatingCartButton";
 import { CartSheet } from "@/components/CartSheet";
@@ -28,13 +29,16 @@ export default function RootLayout({ children }) {
       className={`${outfit.variable} h-full antialiased selection:bg-primary/30`}
     >
       <body className={`${rubik.variable} min-h-full flex flex-col bg-background text-foreground pb-0 font-sans`}>
-        <CartProvider>
-          {children}
-          <FloatingCartButton />
-          <CartSheet />
-          <Toast />
-        </CartProvider>
+        <DataProvider>
+          <CartProvider>
+            {children}
+            <FloatingCartButton />
+            <CartSheet />
+            <Toast />
+          </CartProvider>
+        </DataProvider>
       </body>
     </html>
   );
 }
+

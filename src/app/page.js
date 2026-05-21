@@ -1,6 +1,7 @@
 "use client";
 
 import { clientData } from "@/data/clientData";
+import { useData } from "@/context/DataContext";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
@@ -10,9 +11,24 @@ import { useState } from "react";
 import { GalleryModal } from "@/components/GalleryModal";
 
 export default function HomePage() {
-  const { restaurantInfo, features, offers, gallery, social = clientData.socialMedia, items } = clientData;
+  const data = useData();
+  const { restaurantInfo, features, offers, gallery, socialMedia: social = clientData.socialMedia, items, heroBackgroundImage } = data;
   const [galleryOpen, setGalleryOpen] = useState(false);
   const [initialGalleryIndex, setInitialGalleryIndex] = useState(0);
+
+  const socialMedia = social || {};
+
+  const showFacebook =
+    socialMedia.facebook &&
+    socialMedia.facebookEnabled !== false;
+
+  const showInstagram =
+    socialMedia.instagram &&
+    socialMedia.instagramEnabled !== false;
+
+  const showTikTok =
+    socialMedia.tiktok &&
+    socialMedia.tiktokEnabled !== false;
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -50,7 +66,7 @@ export default function HomePage() {
       <section className="relative h-[85vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image 
-            src={gallery[0] || "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200&q=80"}
+            src={heroBackgroundImage || "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200&q=80"}
             alt="Hero Background"
             fill
             sizes="100vw"
@@ -113,30 +129,40 @@ export default function HomePage() {
             </Link>
 
             {/* Social Media Links */}
+            {features.showSocialMedia && (showFacebook || showInstagram || showTikTok) && (
+              <div className="flex items-center justify-center gap-4 mt-8">
+                {showFacebook && (
+                  <a
+                    href={socialMedia.facebook}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-14 h-14 rounded-full bg-white/10 backdrop-blur-md border border-white/10 flex items-center justify-center text-white hover:bg-orange-500 transition-all"
+                  >
+                    <FaFacebook size={22} />
+                  </a>
+                )}
 
-            {(features.showSocialMedia && social) && (
-  <div className="mt-8 flex gap-4">
+                {showInstagram && (
+                  <a
+                    href={socialMedia.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-14 h-14 rounded-full bg-white/10 backdrop-blur-md border border-white/10 flex items-center justify-center text-white hover:bg-orange-500 transition-all"
+                  >
+                    <FaInstagram size={22} />
+                  </a>
+                )}
 
-    {social.facebook?.enabled && social.facebook.url && (
-      <a href={social.facebook.url} target="_blank" rel="noreferrer"
-        className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[#1877F2] hover:text-white transition-colors border border-white/5">
-        <FaFacebook size={18} />
-      </a>
-    )}
-
-    {social.instagram?.enabled && social.instagram.url && (
-      <a href={social.instagram.url} target="_blank" rel="noreferrer"
-        className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[#E4405F] hover:text-white transition-colors border border-white/5">
-        <FaInstagram size={18} />
-      </a>
-    )}
-
-    {social.tiktok?.enabled && social.tiktok.url && (
-      <a href={social.tiktok.url} target="_blank" rel="noreferrer"
-        className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-black hover:text-white transition-colors border border-white/5">
-        <FaTiktok size={18} />
-      </a>
-    )}
+                {showTikTok && (
+                  <a
+                    href={socialMedia.tiktok}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-14 h-14 rounded-full bg-white/10 backdrop-blur-md border border-white/10 flex items-center justify-center text-white hover:bg-orange-500 transition-all"
+                  >
+                    <FaTiktok size={20} />
+                  </a>
+                )}
               </div>
             )}
           </motion.div>

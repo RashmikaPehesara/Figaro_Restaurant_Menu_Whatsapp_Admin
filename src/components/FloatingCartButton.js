@@ -3,9 +3,14 @@
 import { useCart } from "@/context/CartContext";
 import { ShoppingBag } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { usePathname } from "next/navigation";
 
 export function FloatingCartButton() {
   const { totalItems, setIsCartOpen } = useCart();
+  const pathname = usePathname();
+  const isAdmin = pathname?.startsWith("/admin");
+
+  if (isAdmin) return null;
 
   return (
     <AnimatePresence>

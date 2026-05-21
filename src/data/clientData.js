@@ -1,5 +1,6 @@
 export const clientData = {
   currency: "Rs.",
+  heroBackgroundImage: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200&q=80",
   restaurantInfo: {
     name: "FIGARO",
     tagline: "Delicious Food, Fast Service",
@@ -10,17 +11,6 @@ export const clientData = {
     openingHours: "Mon-Sun: 10:00 AM - 11:00 PM",
     serviceCharge: 5,
     mapEmbedUrl: "https://www.google.com/maps?q=-37.8172,144.9537&z=15&output=embed",
-  },
-  
-  features: {
-    showGallery: true,
-    showOffers: true,
-    enableWhatsappOrder: true,
-    showItemImages: true,
-    showSocialMedia: true,
-    showMap: true,
-    showDescription: true,
-    showPopularPicks: true,
   },
 
   socialMedia: {

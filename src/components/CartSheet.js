@@ -1,13 +1,18 @@
 "use client";
 
 import { useCart } from "@/context/CartContext";
-import { clientData } from "@/data/clientData";
+import { useData } from "@/context/DataContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Minus, Plus, Trash2, MessageCircle } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 
 export function CartSheet() {
+  const pathname = usePathname();
+  const isAdmin = pathname?.startsWith("/admin");
+
+  const clientData = useData();
   const {
     isCartOpen,
     setIsCartOpen,
@@ -21,11 +26,14 @@ export function CartSheet() {
   const [showTablePrompt, setShowTablePrompt] = useState(false);
   const [showOrderSummary, setShowOrderSummary] = useState(false);
 
-  const serviceChargeAmount = (subtotal * clientData.restaurantInfo.serviceCharge) / 100;
+  if (isAdmin) return null;
+
+  const serviceChargePercent = Number(clientData.restaurantInfo?.serviceCharge) || 0;
+  const serviceChargeAmount = (subtotal * serviceChargePercent) / 100;
   const total = subtotal + serviceChargeAmount;
 
   const handleCheckout = () => {
-    if (clientData.features.enableWhatsappOrder) {
+    if (clientData.features?.enableWhatsappOrder) {
       setShowTablePrompt(true);
     } else {
       setShowOrderSummary(true);
@@ -51,7 +59,7 @@ export function CartSheet() {
 
     message += `\nSubtotal: ${clientData.currency} ${Number(subtotal).toLocaleString("en-LK", {minimumFractionDigits: 2, maximumFractionDigits: 2})}\n`;
     if (serviceChargeAmount > 0) {
-      message += `Service Charge (${clientData.restaurantInfo.serviceCharge}%): ${clientData.currency} ${Number(serviceChargeAmount).toLocaleString("en-LK", {minimumFractionDigits: 2, maximumFractionDigits: 2})}\n`;
+      message += `Service Charge (${serviceChargePercent}%): ${clientData.currency} ${Number(serviceChargeAmount).toLocaleString("en-LK", {minimumFractionDigits: 2, maximumFractionDigits: 2})}\n`;
     }
     message += `*Total: ${clientData.currency} ${Number(total).toLocaleString("en-LK", {minimumFractionDigits: 2, maximumFractionDigits: 2})}*\n`;
 
@@ -102,9 +110,9 @@ export function CartSheet() {
               ) : (
                 cartItems.map((item) => (
                   <div key={`${item.id}-${item.size?.name || "single"}`} className="flex gap-4 items-center bg-background p-3 rounded-2xl border border-border">
-                    {clientData.features.showItemImages && item.image && (
+                    {clientData.features?.showItemImages && item.image && (
                       <div className="relative w-16 h-16 rounded-xl overflow-hidden shrink-0">
-                        <Image src={item.image} alt={item.name} fill className="object-cover" />
+                        <Image src={item.image} alt={item.name} fill quality={70} sizes="64px" className="object-cover" />
                       </div>
                     )}
                     <div className="flex-1 min-w-0">
@@ -154,7 +162,7 @@ export function CartSheet() {
                   </div>
                   {serviceChargeAmount > 0 && (
                     <div className="flex justify-between text-sm text-muted-foreground/80 my-2">
-                      <span>Service Charge ({clientData.restaurantInfo.serviceCharge}%)</span>
+                      <span>Service Charge ({serviceChargePercent}%)</span>
                       <span className="font-semibold tracking-wide font-[Rubik] tabular-nums">{clientData.currency} {Number(serviceChargeAmount).toLocaleString("en-LK", {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                     </div>
                   )}
@@ -169,7 +177,7 @@ export function CartSheet() {
                     onClick={handleCheckout}
                     className="w-full bg-primary hover:bg-orange-600 text-primary-foreground font-bold py-4 rounded-2xl flex justify-center items-center gap-2 shadow-lg shadow-primary/20 transition-all active:scale-[0.98]"
                   >
-                    {clientData.features.enableWhatsappOrder ? (
+                    {clientData.features?.enableWhatsappOrder ? (
                       <>
                         <MessageCircle size={20} />
                         Checkout via WhatsApp
