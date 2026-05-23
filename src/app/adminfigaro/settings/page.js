@@ -41,6 +41,19 @@ function Toggle({ checked, onChange }) {
   );
 }
 
+const parseDbWhatsappToLocal = (dbVal) => {
+  if (!dbVal) return "";
+  let clean = dbVal.trim().replace(/[\s\-()]/g, "");
+  // If it starts with +94 or 94, replace with 0
+  if (clean.startsWith("+94")) {
+    return "0" + clean.substring(3);
+  }
+  if (clean.startsWith("94") && clean.length > 9) {
+    return "0" + clean.substring(2);
+  }
+  return clean;
+};
+
 export default function SettingsPage() {
   const [settings, setSettings] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -69,7 +82,7 @@ export default function SettingsPage() {
           restaurantInfo: {
             name: s.restaurantName || s.restaurantInfo?.name || "",
             phone: s.phoneNumber || s.restaurantInfo?.phone || "",
-            whatsapp: s.whatsappNumber || s.restaurantInfo?.whatsapp || "",
+            whatsapp: parseDbWhatsappToLocal(s.whatsappNumber || s.restaurantInfo?.whatsapp || ""),
             address: s.address || s.restaurantInfo?.address || "",
             openingHours:
               s.openingHours || s.restaurantInfo?.openingHours || "",
@@ -116,11 +129,16 @@ export default function SettingsPage() {
   const handleInfoChange = (field, value) => {
     if (!settings) return;
 
+    let updatedValue = value;
+    if (field === "whatsapp") {
+      updatedValue = value.replace(/\D/g, "").substring(0, 10);
+    }
+
     setSettings({
       ...settings,
       restaurantInfo: {
         ...(settings.restaurantInfo || {}),
-        [field]: value,
+        [field]: updatedValue,
       },
     });
   };
@@ -148,10 +166,44 @@ export default function SettingsPage() {
     setIsSubmitting(true);
 
     try {
+      let localWhatsapp = settings.restaurantInfo?.whatsapp || "";
+      localWhatsapp = localWhatsapp.trim().replace(/\D/g, "");
+
+      if (!localWhatsapp) {
+        toast.error("WhatsApp number is required.");
+        setIsSubmitting(false);
+        return;
+      }
+
+      if (localWhatsapp.length !== 10) {
+        toast.error("WhatsApp number must be exactly 10 digits (e.g. 0768638725).");
+        setIsSubmitting(false);
+        return;
+      }
+
+      const prefix = localWhatsapp.substring(0, 3);
+      const allowedPrefixes = ["070", "071", "072", "074", "075", "076", "077", "078"];
+      if (!allowedPrefixes.includes(prefix)) {
+        toast.error("Invalid WhatsApp number prefix. Must start with 070, 071, 072, 074, 075, 076, 077, or 078.");
+        setIsSubmitting(false);
+        return;
+      }
+
+      const dbWhatsapp = "+94" + localWhatsapp.substring(1);
+
+      // Keep state as local number (07xxxxxxxx) so the user never sees +94
+      setSettings((prev) => ({
+        ...prev,
+        restaurantInfo: {
+          ...prev.restaurantInfo,
+          whatsapp: localWhatsapp,
+        },
+      }));
+
       const payload = {
         restaurantName: settings.restaurantInfo?.name || "",
         phoneNumber: settings.restaurantInfo?.phone || "",
-        whatsappNumber: settings.restaurantInfo?.whatsapp || "",
+        whatsappNumber: dbWhatsapp,
         address: settings.restaurantInfo?.address || "",
         openingHours: settings.restaurantInfo?.openingHours || "",
 

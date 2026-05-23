@@ -10,6 +10,30 @@ import { FaFacebook, FaInstagram, FaTiktok } from "react-icons/fa";
 import { useState } from "react";
 import { GalleryModal } from "@/components/GalleryModal";
 
+const getNormalMapUrl = (embedUrl, address) => {
+  if (!embedUrl) return `https://www.google.com/maps?q=${encodeURIComponent(address || "")}`;
+  
+  const match = embedUrl.match(/!2d([^!]+)!3d([^!]+)/);
+  if (match) {
+    const lng = match[1];
+    const lat = match[2];
+    return `https://www.google.com/maps?q=${lat},${lng}`;
+  }
+  
+  const matchInverse = embedUrl.match(/!3d([^!]+)!2d([^!]+)/);
+  if (matchInverse) {
+    const lat = matchInverse[1];
+    const lng = matchInverse[2];
+    return `https://www.google.com/maps?q=${lat},${lng}`;
+  }
+
+  if (address) {
+    return `https://www.google.com/maps?q=${encodeURIComponent(address)}`;
+  }
+
+  return "https://www.google.com/maps";
+};
+
 export default function HomePage() {
   const data = useData();
   const { restaurantInfo, features, offers, gallery, socialMedia: social = clientData.socialMedia, items, heroBackgroundImage } = data;
@@ -321,14 +345,15 @@ export default function HomePage() {
                       loading="lazy"
                       title="Google Maps Location"
                     />
-                    <a
-                      href={restaurantInfo.mapEmbedUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground px-6 py-3 rounded-full font-semibold shadow-[0_10px_30px_rgba(249,115,22,0.45)] hover:scale-105 transition-all"
+                     <button
+                      onClick={() => {
+                        const mapUrl = getNormalMapUrl(restaurantInfo.mapEmbedUrl, restaurantInfo.address);
+                        window.open(mapUrl, "_blank");
+                      }}
+                      className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground px-6 py-3 rounded-full font-semibold shadow-[0_10px_30px_rgba(249,115,22,0.45)] hover:scale-105 transition-all cursor-pointer"
                     >
                       Open in Maps
-                    </a>
+                    </button>
                   </div>
                 </div>
               </div>

@@ -30,6 +30,7 @@ export default function CategoryItemsPage() {
 }
 
 function CategoryItemsView({ category, items }) {
+  const clientData = useData();
   const { addToCart } = useCart();
   const [selectedImage, setSelectedImage] = useState(null);
 

@@ -115,7 +115,7 @@ export default function Sidebar() {
         </nav>
 
         {/* User/Logout */}
-        <div className="p-4 border-t border-zinc-800">
+        <div className="p-4 pb-8 lg:pb-4 border-t border-zinc-800">
           <button
             onClick={() => signOut()}
             className={`flex items-center gap-3 px-4 py-3 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-orange-500/20 transition-all text-white font-medium cursor-pointer touch-manipulation relative z-10 min-h-[48px] ${

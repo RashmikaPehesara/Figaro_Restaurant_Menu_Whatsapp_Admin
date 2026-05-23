@@ -5,7 +5,7 @@
     "showGallery": true,
     "showOffers": true,
     "enableWhatsappOrder": false,
-    "showItemImages": false,
+    "showItemImages": true,
     "showSocialMedia": true,
     "showMap": true,
     "showDescription": true,
@@ -32,7 +32,7 @@
   "openingHours": "Monday - Saturday: 11:00 AM - 11:00 PM",
   "phoneNumber": "0768968754",
   "restaurantName": "FIGARO",
-  "whatsappNumber": "0768789654",
+  "whatsappNumber": "+94768638725",
   "gallery": [
     "https://res.cloudinary.com/dfgkfyldd/image/upload/v1779371069/restaurant-menu/wjsqatqlr08vjr65akml.jpg",
     "https://res.cloudinary.com/dfgkfyldd/image/upload/v1779371061/restaurant-menu/bpypkpzxqcl1zuhjlbzs.jpg",
@@ -43,7 +43,7 @@
     "https://res.cloudinary.com/dfgkfyldd/image/upload/v1779371033/restaurant-menu/fzn67oiesfzqy1npbizg.jpg",
     "https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?w=1200&q=80"
   ],
-  "updatedAt": "2026-05-21T18:42:03.134Z",
+  "updatedAt": "2026-05-23T20:31:22.120Z",
   "heroBackgroundImage": "",
   "mapEmbedUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.9113693245455!2d79.8776!3d6.9244!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNsKwNTUnMjtwOCJOIDc5wrA1MiczOS40IkU!5e0!3m2!1sen!2slk!4v1700000000000",
   "serviceCharge": 5
