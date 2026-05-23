@@ -15,6 +15,7 @@ import {
   Menu,
   X,
   Shield,
+  Globe,
 } from "lucide-react";
 import { useState } from "react";
 import { signOut } from "next-auth/react";
@@ -114,8 +115,20 @@ export default function Sidebar() {
           })}
         </nav>
 
-        {/* User/Logout */}
-        <div className="p-4 pb-8 lg:pb-4 border-t border-zinc-800">
+        {/* User/Logout & Go To Website */}
+        <div className="p-4 pb-8 lg:pb-4 border-t border-zinc-800 flex flex-col gap-2">
+          <button
+            onClick={() => window.open("/", "_self")}
+            className={`flex items-center gap-3 px-4 py-3 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-orange-500/20 transition-all text-white font-medium cursor-pointer touch-manipulation relative z-10 min-h-[48px] ${
+              isCollapsed ? 'w-12 justify-center' : 'w-full'
+            }`}
+          >
+            <Globe size={18} className="shrink-0" />
+            <span className={`transition-opacity duration-200 ${isCollapsed ? 'opacity-0 lg:hidden' : 'opacity-100'}`}>
+              Go To Website
+            </span>
+          </button>
+
           <button
             onClick={() => signOut()}
             className={`flex items-center gap-3 px-4 py-3 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-orange-500/20 transition-all text-white font-medium cursor-pointer touch-manipulation relative z-10 min-h-[48px] ${
