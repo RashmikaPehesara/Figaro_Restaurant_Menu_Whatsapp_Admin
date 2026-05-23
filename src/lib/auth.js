@@ -10,6 +10,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     signIn: "/adminfigaro/login",
   },
   callbacks: {
+    redirect({ url, baseUrl }) {
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      try {
+        const parsedUrl = new URL(url);
+        if (parsedUrl.origin === baseUrl) return url;
+      } catch (e) {}
+      return baseUrl;
+    },
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
