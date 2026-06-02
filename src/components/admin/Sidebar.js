@@ -118,7 +118,7 @@ export default function Sidebar() {
         </nav>
 
         {/* User/Logout & Go To Website */}
-        <div className="p-4 pb-13 lg:pb-4 border-t border-zinc-800 flex flex-col gap-2">
+        <div className="p-4 pb-20 lg:pb-4 border-t border-zinc-800 flex flex-col gap-2">
           <button
             onClick={() => {
               router.push("/");
