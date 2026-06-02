@@ -3,9 +3,9 @@
 import { useCart } from "@/context/CartContext";
 import { useData } from "@/context/DataContext";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Minus, Plus, Trash2, MessageCircle } from "lucide-react";
+import { X, Minus, Plus, Trash2, MessageCircle, AlertTriangle } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 
 export function CartSheet() {
@@ -25,6 +25,21 @@ export function CartSheet() {
   const [tableNumber, setTableNumber] = useState("");
   const [showTablePrompt, setShowTablePrompt] = useState(false);
   const [showOrderSummary, setShowOrderSummary] = useState(false);
+  const [showTableAlert, setShowTableAlert] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        setShowTableAlert(false);
+      }
+    };
+    if (showTableAlert) {
+      window.addEventListener("keydown", handleKeyDown);
+    }
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [showTableAlert]);
 
   if (isAdmin) return null;
 
@@ -42,7 +57,7 @@ export function CartSheet() {
 
   const submitWhatsappOrder = () => {
     if (!tableNumber) {
-      alert("Please enter a table number");
+      setShowTableAlert(true);
       return;
     }
 
@@ -307,6 +322,50 @@ export function CartSheet() {
               Close
             </button>
           </div>
+        </div>
+      )}
+
+      {showTableAlert && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+          {/* Backdrop */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setShowTableAlert(false)}
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm cursor-pointer"
+          />
+          {/* Modal Box */}
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            transition={{ type: "spring", damping: 25, stiffness: 350 }}
+            className="relative w-full max-w-sm bg-[#111] rounded-[24px] shadow-2xl border border-white/10 p-6 text-white text-center flex flex-col items-center z-10"
+          >
+            {/* Warning Icon */}
+            <div className="w-12 h-12 rounded-full bg-orange-500/10 border border-orange-500/20 flex items-center justify-center mb-4">
+              <AlertTriangle className="h-6 w-6 text-orange-500" />
+            </div>
+
+            {/* Title */}
+            <h3 className="text-lg font-bold text-white mb-2">
+              Table Number Required
+            </h3>
+
+            {/* Message */}
+            <p className="text-sm text-zinc-400 mb-6 leading-relaxed">
+              Please enter your table number before sending the order.
+            </p>
+
+            {/* Button */}
+            <button
+              onClick={() => setShowTableAlert(false)}
+              className="w-full bg-orange-500 hover:bg-orange-600 py-3 rounded-xl text-sm font-semibold transition-all active:scale-[0.98] text-white cursor-pointer"
+            >
+              OK
+            </button>
+          </motion.div>
         </div>
       )}
     </AnimatePresence>

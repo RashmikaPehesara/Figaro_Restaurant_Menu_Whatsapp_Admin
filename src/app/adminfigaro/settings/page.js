@@ -19,6 +19,7 @@ import {
 import { FaFacebook, FaInstagram } from "react-icons/fa";
 import { toast } from "react-toastify";
 import ImageUpload from "@/components/admin/ImageUpload";
+import { useRefreshData } from "@/context/DataContext";
 
 // ─────────────────────────────────────────────
 // Small Toggle Component
@@ -55,6 +56,7 @@ const parseDbWhatsappToLocal = (dbVal) => {
 };
 
 export default function SettingsPage() {
+  const refreshData = useRefreshData();
   const [settings, setSettings] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -231,6 +233,7 @@ export default function SettingsPage() {
       if (res.ok) {
         toast.success("Settings saved successfully!");
         fetchSettings();
+        refreshData();
       } else {
         toast.error("Failed to save settings");
       }

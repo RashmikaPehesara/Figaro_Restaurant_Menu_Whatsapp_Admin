@@ -6,8 +6,10 @@ import { useRouter } from "next/navigation";
 import { Loader2, Lock, Mail, Eye, EyeOff } from "lucide-react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useData } from "@/context/DataContext";
 
 export default function AdminLoginPage() {
+  const clientData = useData();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -45,8 +47,8 @@ export default function AdminLoginPage() {
       <div className="w-full">
         {/* Logo */}
         <div className="text-center mb-8 sm:mb-10">
-          <h1 className="text-5xl sm:text-6xl font-extrabold tracking-tight text-white">
-            FIGARO<span className="text-orange-500">.</span>
+          <h1 className="text-5xl sm:text-6xl font-extrabold tracking-tight text-white uppercase">
+            {clientData?.restaurantInfo?.name || "FIGARO"}<span className="text-orange-500">.</span>
           </h1>
 
           <p className="text-zinc-400 mt-3 text-sm sm:text-base font-medium">
@@ -73,7 +75,6 @@ export default function AdminLoginPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@figaro.com"
                   className="w-full h-14 rounded-2xl bg-zinc-800/70 border border-zinc-700 pl-12 pr-4 text-white placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition text-base"
                 />
               </div>
@@ -128,7 +129,7 @@ export default function AdminLoginPage() {
         {/* Footer */}
         <div className="mt-8 text-center w-full">
           <p className="text-zinc-600 text-xs sm:text-sm leading-6">
-            © {new Date().getFullYear()} Figaro Restaurant System.
+            © {new Date().getFullYear()} {clientData?.restaurantInfo?.name || "Figaro"} Restaurant System.
             <br />
             Secure Admin Access Only.
           </p>

@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { signOut } from "next-auth/react";
+import { useData } from "@/context/DataContext";
 
 const navItems = [
   { label: "Dashboard", href: "/adminfigaro/dashboard", icon: LayoutDashboard },
@@ -31,6 +32,7 @@ const navItems = [
 ];
 
 export default function Sidebar() {
+  const clientData = useData();
   const pathname = usePathname();
   const router = useRouter();
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -67,7 +69,7 @@ export default function Sidebar() {
         {/* Header */}
         <div className="p-6 flex items-center justify-between">
           <Link href="/adminfigaro/dashboard" onClick={() => setIsMobileOpen(false)} className={`font-bold text-white transition-all overflow-hidden ${isCollapsed ? 'w-0' : 'w-auto'}`}>
-            <span className="text-2xl tracking-tighter">FIGARO<span className="text-orange-500">.</span></span>
+            <span className="text-2xl tracking-tighter uppercase">{(clientData?.restaurantInfo?.name || "FIGARO")}<span className="text-orange-500">.</span></span>
           </Link>
           <div className="flex items-center">
             {/* Desktop Toggle */}
@@ -116,7 +118,7 @@ export default function Sidebar() {
         </nav>
 
         {/* User/Logout & Go To Website */}
-        <div className="p-4 pb-32 lg:pb-4 border-t border-zinc-800 flex flex-col gap-2">
+        <div className="p-4 pb-8 lg:pb-4 border-t border-zinc-800 flex flex-col gap-2">
           <button
             onClick={() => {
               router.push("/");
