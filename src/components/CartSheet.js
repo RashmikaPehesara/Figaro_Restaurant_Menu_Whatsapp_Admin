@@ -43,7 +43,11 @@ export function CartSheet() {
 
   if (isAdmin) return null;
 
-  const serviceChargePercent = Number(clientData.restaurantInfo?.serviceCharge) || 0;
+  const serviceChargePercent = typeof clientData.serviceCharge === 'number'
+    ? clientData.serviceCharge
+    : (typeof clientData.restaurantInfo?.serviceCharge === 'number'
+        ? clientData.restaurantInfo.serviceCharge
+        : 5);
   const serviceChargeAmount = (subtotal * serviceChargePercent) / 100;
   const total = subtotal + serviceChargeAmount;
 

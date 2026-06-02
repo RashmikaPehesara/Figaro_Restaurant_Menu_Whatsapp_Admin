@@ -456,6 +456,29 @@ export default function SettingsPage() {
               />
             </div>
 
+            <div className="space-y-2 md:col-span-2">
+              <label className="text-sm font-medium text-zinc-500 flex items-center gap-2">
+                <SettingsIcon size={14} />
+                Service Charge (%)
+              </label>
+
+              <input
+                type="number"
+                min="0"
+                max="100"
+                step="0.1"
+                value={settings?.serviceCharge !== undefined && settings?.serviceCharge !== null ? settings.serviceCharge : 5}
+                onChange={(e) => {
+                  const val = parseFloat(e.target.value);
+                  setSettings({
+                    ...settings,
+                    serviceCharge: isNaN(val) ? 0 : val,
+                  });
+                }}
+                className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-2xl text-white focus:ring-2 focus:ring-orange-500/50 outline-none"
+              />
+            </div>
+
           </div>
         </div>
 
