@@ -21,6 +21,14 @@ const AdminSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    resetToken: {
+      type: String,
+      default: null,
+    },
+    resetTokenExpiry: {
+      type: Date,
+      default: null,
+    },
   },
   {
     timestamps: true,
@@ -29,4 +37,7 @@ const AdminSchema = new mongoose.Schema(
 );
 
 // Prevent compile-time duplicate registration during HMR hot reloads
+if (mongoose.models.Admin && !mongoose.models.Admin.schema.paths.resetToken) {
+  delete mongoose.models.Admin;
+}
 export default mongoose.models.Admin || mongoose.model("Admin", AdminSchema);

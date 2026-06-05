@@ -10,7 +10,9 @@ export default function AdminLayout({ children }) {
   // Auth pages do not display sidebar layout
   const isAuthPage = 
     pathname === "/adminfigaro" || 
-    pathname === "/adminfigaro/login";
+    pathname === "/adminfigaro/login" ||
+    pathname === "/adminfigaro/forgot-password" ||
+    pathname === "/adminfigaro/reset-password";
 
   return (
     <Providers>

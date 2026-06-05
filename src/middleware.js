@@ -11,9 +11,13 @@ const authConfig = {
       const isLoginPage = 
         nextUrl.pathname === "/adminfigaro/login" || 
         nextUrl.pathname === "/adminfigaro";
+      const isPublicAdminRoute =
+        isLoginPage ||
+        nextUrl.pathname === "/adminfigaro/forgot-password" ||
+        nextUrl.pathname === "/adminfigaro/reset-password";
 
       if (isAdminRoute) {
-        if (isLoginPage) {
+        if (isPublicAdminRoute) {
           if (isLoggedIn) {
             return Response.redirect(new URL("/adminfigaro/dashboard", nextUrl));
           }
