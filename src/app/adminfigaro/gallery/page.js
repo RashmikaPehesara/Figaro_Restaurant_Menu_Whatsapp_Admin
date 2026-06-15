@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import LazyImage from "@/components/LazyImage";
 import {
   Trash2,
   Loader2,
@@ -291,11 +292,12 @@ export default function GalleryPage() {
                 key={imgId}
                 className="relative aspect-square rounded-2xl overflow-hidden border border-zinc-800 bg-zinc-900 group shadow-md hover:border-orange-500/30 transition-all duration-300"
               >
-                <img
+                <LazyImage
                   src={imgSrc}
                   alt="Gallery photo"
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  loading="lazy"
+                  fill
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
                 />
 
                 {/* Date tag if available */}

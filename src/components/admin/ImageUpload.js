@@ -43,7 +43,7 @@ export default function ImageUpload({ value, onChange, label = "Upload Image" })
 
       if (res.ok && (data.url || data.imageUrl)) {
         const uploadedUrl = data.url || data.imageUrl;
-        onChange(uploadedUrl);
+        onChange(uploadedUrl, data.publicId || "");
         toast.success("Image uploaded successfully!");
       } else {
         console.error("Upload API error:", data);
@@ -67,7 +67,7 @@ export default function ImageUpload({ value, onChange, label = "Upload Image" })
           <img src={value} alt="Preview" className="w-full h-full object-cover" />
           <button
             type="button"
-            onClick={() => onChange("")}
+            onClick={() => onChange("", "")}
             className="absolute top-2 right-2 p-1.5 bg-black/60 hover:bg-black/80 text-white rounded-full backdrop-blur-sm transition-all"
           >
             <X size={16} />

@@ -20,28 +20,20 @@ import ImageUpload from "@/components/admin/ImageUpload";
 import DeleteConfirmModal from "@/components/admin/DeleteConfirmModal";
 import { normalizeArray } from "@/utils/normalizeArray";
 
+import LazyImage from "@/components/LazyImage";
+
 // Bulletproof Next.js Image compatible wrapper supporting local, remote, and base64 URLs
 const FoodImage = ({ src, alt }) => {
-  const isNextImageCompatible = src && 
-    (src.startsWith("/") || src.startsWith("http://") || src.startsWith("https://")) && 
-    !src.startsWith("data:");
-
-  if (isNextImageCompatible) {
+  if (src) {
     return (
-      <Image 
+      <LazyImage 
         src={src} 
         alt={alt} 
-        width={56}
-        height={56}
-        className="w-full h-full object-cover" 
-        loading="lazy"
+        fill
+        className="object-cover" 
         sizes="(max-width: 768px) 100vw, 33vw"
       />
     );
-  }
-
-  if (src) {
-    return <img src={src} alt={alt} className="w-full h-full object-cover" loading="lazy" />;
   }
 
   return (
@@ -170,6 +162,7 @@ export default function FoodsPage() {
     description: "",
     categoryId: "",
     image: "",
+    imagePublicId: "",
     featured: false,
     pricing: {
       type: "single",
@@ -272,6 +265,7 @@ export default function FoodsPage() {
         description: food.description || "",
         categoryId: food.categoryId,
         image: food.image || "",
+        imagePublicId: food.imagePublicId || "",
         featured: food.featured || false,
         pricing: food.pricing || { type: "single", price: "", options: [] }
       });
@@ -282,6 +276,7 @@ export default function FoodsPage() {
         description: "",
         categoryId: safeCategories[0]?.id || "",
         image: "",
+        imagePublicId: "",
         featured: false,
         pricing: {
           type: "single",
@@ -579,7 +574,7 @@ export default function FoodsPage() {
               <div>
                 <ImageUpload 
                   value={formData.image} 
-                  onChange={(url) => setFormData({ ...formData, image: url })} 
+                  onChange={(url, publicId) => setFormData({ ...formData, image: url, imagePublicId: publicId || "" })} 
                   label="Food Image"
                 />
               </div>

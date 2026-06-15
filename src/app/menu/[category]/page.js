@@ -4,7 +4,7 @@ import { clientData } from "@/data/clientData";
 import { useData } from "@/context/DataContext";
 import { ArrowLeft, Plus } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
+import LazyImage from "@/components/LazyImage";
 import { notFound, useParams } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 import { useState } from "react";
@@ -150,7 +150,7 @@ function ItemRow({ item, index, addToCart }) {
 
         {/* Price & Multi-pricing Selector */}
         <div className="flex flex-wrap items-center gap-3 md:gap-4 mt-2.5">
-          <span className="text-primary font-bold text-base md:text-lg tracking-wide font-sans tabular-nums">
+          <span className="text-primary font-bold text-base md:text-lg tracking-wide font-sans tabular-nums whitespace-nowrap shrink-0">
             {clientData.currency} {Number(currentPrice).toLocaleString("en-LK", {minimumFractionDigits: 2, maximumFractionDigits: 2})}
           </span>
 
@@ -160,7 +160,7 @@ function ItemRow({ item, index, addToCart }) {
                 <button
                   key={opt.label}
                   onClick={() => setSelectedSize(opt)}
-                  className={`px-2.5 py-1 text-[11px] font-bold rounded-full transition-all active:scale-95 ${
+                  className={`px-3 py-1.5 text-[13px] font-bold rounded-full transition-all active:scale-95 ${
                     selectedSize?.label === opt.label
                       ? "bg-primary text-primary-foreground shadow-sm shadow-primary/30"
                       : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700"
@@ -214,31 +214,30 @@ function ItemCard({ item, onImageClick, addToCart }) {
           className="relative aspect-square w-full cursor-pointer overflow-hidden bg-muted"
           onClick={onImageClick}
         >
-          <Image 
+          <LazyImage 
             src={item.image} 
             alt={item.name} 
             fill
-            loading="lazy"
             sizes="(max-width: 768px) 50vw, 33vw"
             className="object-cover transition-transform duration-500 group-hover:scale-105" 
           />
         </div>
       )}
-      <div className="p-4 md:p-5 flex flex-col flex-1 justify-between">
-        <h3 className="font-extrabold text-sm md:text-lg leading-tight mb-2 group-hover:text-primary transition-colors">{item.name}</h3>
+      <div className="p-[clamp(0.75rem,calc(5vw-4px),1rem)] md:p-5 flex flex-col flex-1 justify-between">
+        <h3 className="font-extrabold text-[clamp(0.75rem,calc(2vw+5px),0.875rem)] md:text-lg leading-tight mb-2 group-hover:text-primary transition-colors">{item.name}</h3>
         {clientData.features.showDescription && item.description && (
-          <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
+          <p className="text-[clamp(0.7rem,calc(2vw+4px),0.875rem)] text-muted-foreground mb-3 line-clamp-2">
             {item.description}
           </p>
         )}
         
         {item.pricing.type === "multi" && (
-          <div className="flex flex-wrap gap-2.5 mt-2 mb-4">
+          <div className="flex flex-wrap gap-[clamp(0.35rem,calc(2vw-1px),0.625rem)] mt-2 mb-4">
             {item.pricing.options.map((opt) => (
               <button
                 key={opt.label}
                 onClick={() => setSelectedSize(opt)}
-                className={`px-3 py-1.5 text-[13px] font-semibold rounded-full transition-all active:scale-95 ${selectedSize?.label === opt.label ? "bg-primary text-primary-foreground shadow-sm shadow-primary/30" : "bg-white/10 text-muted-foreground hover:bg-border"}`}
+                className={`px-[clamp(0.5rem,calc(3vw-1px),0.75rem)] py-[clamp(0.25rem,calc(1.5vw-0.5px),0.375rem)] text-[clamp(0.6875rem,calc(2.5vw+3px),0.8125rem)] font-semibold rounded-full transition-all active:scale-95 shrink-0 ${selectedSize?.label === opt.label ? "bg-primary text-primary-foreground shadow-sm shadow-primary/30" : "bg-white/10 text-muted-foreground hover:bg-border"}`}
               >
                 {opt.label}
               </button>
@@ -246,17 +245,17 @@ function ItemCard({ item, onImageClick, addToCart }) {
           </div>
         )}
 
-        <div className="flex items-center justify-between mt-auto pt-2">
-          <span className="text-primary font-semibold text-lg md:text-xl tracking-wide font-sans tabular-nums">{clientData.currency} {Number(currentPrice).toLocaleString("en-LK", {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+        <div className="flex items-center justify-between mt-auto pt-2 gap-2 w-full min-w-0">
+          <span className="text-primary font-semibold text-[clamp(0.75rem,calc(5vw-3px),1.125rem)] md:text-xl tracking-wide font-sans tabular-nums whitespace-nowrap shrink-0">{clientData.currency} {Number(currentPrice).toLocaleString("en-LK", {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
           <motion.button 
             onClick={handleAdd}
             whileTap={{ scale: 0.8 }}
             animate={isAdding ? { scale: [1, 1.2, 1], backgroundColor: ["var(--color-muted)", "var(--color-primary)", "var(--color-muted)"], color: ["var(--color-foreground)", "var(--color-primary-foreground)", "var(--color-foreground)"] } : {}}
             transition={{ duration: 0.3 }}
-            className={`w-10 h-10 md:w-12 md:h-12 rounded-2xl flex items-center justify-center transition-colors shadow-sm ${isAdding ? "bg-primary text-primary-foreground" : "bg-muted hover:bg-primary hover:text-primary-foreground text-foreground"}`}
+            className={`w-[clamp(1.75rem,calc(12vw-10px),2.5rem)] h-[clamp(1.75rem,calc(12vw-10px),2.5rem)] md:w-12 md:h-12 rounded-2xl flex items-center justify-center transition-colors shadow-sm shrink-0 ${isAdding ? "bg-primary text-primary-foreground" : "bg-muted hover:bg-primary hover:text-primary-foreground text-foreground"}`}
             aria-label="Add to cart"
           >
-            <Plus size={20} />
+            <Plus size={20} className="w-[clamp(0.875rem,calc(6vw-5px),1.25rem)] h-[clamp(0.875rem,calc(6vw-5px),1.25rem)]" />
           </motion.button>
         </div>
       </div>

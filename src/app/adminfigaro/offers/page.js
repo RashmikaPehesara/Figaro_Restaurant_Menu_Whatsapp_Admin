@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import LazyImage from "@/components/LazyImage";
 import { 
   Plus, 
   Search, 
@@ -199,7 +200,7 @@ export default function OffersPage() {
             <div key={offer._id} className="bg-zinc-900 border border-zinc-800 rounded-3xl overflow-hidden group flex flex-col h-full hover:border-zinc-700 transition-all select-none">
               <div className="relative h-48 bg-zinc-800 shrink-0">
                 {offer.image ? (
-                  <img src={offer.image} alt={offer.title} className="w-full h-full object-cover" />
+                  <LazyImage src={offer.image} alt={offer.title} fill className="object-cover" sizes="(max-width: 768px) 100vw, 33vw" />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-zinc-700">
                     <TicketPercent size={48} />

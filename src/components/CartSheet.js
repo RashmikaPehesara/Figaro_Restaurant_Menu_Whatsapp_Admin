@@ -5,6 +5,7 @@ import { useData } from "@/context/DataContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Minus, Plus, Trash2, MessageCircle, AlertTriangle } from "lucide-react";
 import Image from "next/image";
+import { cloudinaryLoader } from "@/components/LazyImage";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 
@@ -131,7 +132,15 @@ export function CartSheet() {
                   <div key={`${item.id}-${item.size?.name || "single"}`} className="flex gap-4 items-center bg-background p-3 rounded-2xl border border-border">
                     {clientData.features?.showItemImages && item.image && (
                       <div className="relative w-16 h-16 rounded-xl overflow-hidden shrink-0">
-                        <Image src={item.image} alt={item.name} fill quality={70} sizes="64px" className="object-cover" />
+                        <Image 
+                          loader={item.image.includes("res.cloudinary.com") ? cloudinaryLoader : undefined}
+                          src={item.image} 
+                          alt={item.name} 
+                          fill 
+                          quality={70} 
+                          sizes="64px" 
+                          className="object-cover" 
+                        />
                       </div>
                     )}
                     <div className="flex-1 min-w-0">
@@ -139,7 +148,7 @@ export function CartSheet() {
                       {item.size && (
                         <p className="text-xs text-muted-foreground">{item.size.name}</p>
                       )}
-                      <div className="text-primary font-semibold text-lg tracking-wide font-[Rubik] tabular-nums mt-1">
+                      <div className="text-primary font-semibold text-[clamp(0.85rem,4.5vw,1.125rem)] tracking-wide font-[Rubik] tabular-nums mt-1 whitespace-nowrap shrink-0">
                         {clientData.currency} {Number(item.size?.price || item.pricing.price).toLocaleString("en-LK", {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                       </div>
                     </div>
@@ -175,19 +184,19 @@ export function CartSheet() {
             {cartItems.length > 0 && (
               <div className="p-4 border-t border-border bg-card">
                 <div className="space-y-2 mb-4 text-sm">
-                  <div className="flex justify-between text-muted-foreground mb-4 text-sm">
+                  <div className="flex justify-between text-muted-foreground mb-4 text-sm gap-2">
                     <span>Subtotal</span>
-                    <span className="font-semibold tracking-wide font-[Rubik] tabular-nums">{clientData.currency} {Number(subtotal).toLocaleString("en-LK", {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                    <span className="font-semibold tracking-wide font-[Rubik] tabular-nums whitespace-nowrap shrink-0">{clientData.currency} {Number(subtotal).toLocaleString("en-LK", {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                   </div>
                   {serviceChargeAmount > 0 && (
-                    <div className="flex justify-between text-sm text-muted-foreground/80 my-2">
+                    <div className="flex justify-between text-sm text-muted-foreground/80 my-2 gap-2">
                       <span>Service Charge ({serviceChargePercent}%)</span>
-                      <span className="font-semibold tracking-wide font-[Rubik] tabular-nums">{clientData.currency} {Number(serviceChargeAmount).toLocaleString("en-LK", {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                      <span className="font-semibold tracking-wide font-[Rubik] tabular-nums whitespace-nowrap shrink-0">{clientData.currency} {Number(serviceChargeAmount).toLocaleString("en-LK", {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                     </div>
                   )}
-                  <div className="flex justify-between font-black text-xl md:text-2xl mt-4 pt-4 border-t border-border/50">
+                  <div className="flex justify-between font-black text-xl md:text-2xl mt-4 pt-4 border-t border-border/50 gap-2">
                     <span>Total</span>
-                    <span className="text-primary font-semibold text-lg md:text-xl tracking-wide font-[Rubik] tabular-nums">{clientData.currency} {Number(total).toLocaleString("en-LK", {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                    <span className="text-primary font-semibold text-lg md:text-xl tracking-wide font-[Rubik] tabular-nums whitespace-nowrap shrink-0">{clientData.currency} {Number(total).toLocaleString("en-LK", {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                   </div>
                 </div>
 

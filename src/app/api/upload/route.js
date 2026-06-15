@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
 import cloudinary from "@/lib/cloudinary";
+import crypto from "crypto";
+import { connectDB } from "@/lib/mongodb";
+import ImageHash from "@/models/ImageHash";
 
 export const runtime = "nodejs";
 
@@ -39,6 +42,24 @@ export async function POST(request) {
     // Convert File/Blob to Buffer → base64 data URI
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
+
+    // Generate SHA-256 file hash
+    const hash = crypto.createHash("sha256").update(buffer).digest("hex");
+
+    await connectDB();
+
+    // Check if the image has already been uploaded
+    const existingImage = await ImageHash.findOne({ hash });
+    if (existingImage) {
+      console.log(`[UPLOAD] Duplicate image detected. Reusing existing URL: ${existingImage.url}`);
+      return NextResponse.json({
+        success: true,
+        url: existingImage.url,
+        imageUrl: existingImage.url, // alias for gallery page compatibility
+        publicId: existingImage.publicId,
+      });
+    }
+
     const base64 = buffer.toString("base64");
     const dataUri = `data:${file.type};base64,${base64}`;
 
@@ -54,6 +75,13 @@ export async function POST(request) {
     if (!result?.secure_url) {
       throw new Error("Cloudinary did not return a secure URL");
     }
+
+    // Store hash-to-url mapping in database
+    await ImageHash.create({
+      hash,
+      url: result.secure_url,
+      publicId: result.public_id,
+    });
 
     return NextResponse.json({
       success: true,

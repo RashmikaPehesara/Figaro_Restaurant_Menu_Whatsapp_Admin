@@ -3,8 +3,7 @@
 import { useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Loader2, Lock, Eye, EyeOff } from "lucide-react";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import { useData } from "@/context/DataContext";
 import Link from "next/link";
 
@@ -210,8 +209,6 @@ function ResetPasswordForm() {
           </p>
         </div>
       </div>
-
-      <ToastContainer theme="dark" position="top-right" autoClose={3000} />
     </div>
   );
 }

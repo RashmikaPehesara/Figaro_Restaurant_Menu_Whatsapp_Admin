@@ -4,8 +4,7 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Loader2, Lock, Mail, Eye, EyeOff } from "lucide-react";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import { useData } from "@/context/DataContext";
 import Link from "next/link";
 
@@ -43,8 +42,6 @@ export default function AdminLoginPage() {
 
   return (
     <div className="w-full max-w-[440px] sm:max-w-[480px] md:max-w-[500px] lg:max-w-[520px] mx-auto px-4 sm:px-6 md:px-0 flex flex-col justify-center items-center min-h-screen py-10 sm:py-16 md:py-20 overflow-x-hidden">
-      <ToastContainer theme="dark" />
-
       <div className="w-full">
         {/* Logo */}
         <div className="text-center mb-8 sm:mb-10">

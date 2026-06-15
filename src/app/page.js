@@ -5,6 +5,7 @@ import { useData } from "@/context/DataContext";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
+import LazyImage, { cloudinaryLoader } from "@/components/LazyImage";
 import { PhoneCall, MessageCircle, MapPin, Clock, ExternalLink } from "lucide-react";
 import { FaFacebook, FaInstagram, FaTiktok } from "react-icons/fa";
 import { useState } from "react";
@@ -90,6 +91,7 @@ export default function HomePage() {
       <section className="relative h-[85vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image 
+            loader={heroBackgroundImage && heroBackgroundImage.includes("res.cloudinary.com") ? cloudinaryLoader : undefined}
             src={heroBackgroundImage || "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200&q=80"}
             alt="Hero Background"
             fill
@@ -110,6 +112,7 @@ export default function HomePage() {
           <motion.div variants={itemVariants} className="mb-6 flex justify-center items-center w-full">
             {restaurantInfo.logo ? (
               <Image
+                loader={restaurantInfo.logo && restaurantInfo.logo.includes("res.cloudinary.com") ? cloudinaryLoader : undefined}
                 src={restaurantInfo.logo}
                 alt="Logo"
                 width={190}
@@ -207,7 +210,7 @@ export default function HomePage() {
                 whileHover={{ y: -5 }}
                 className="relative h-48 rounded-3xl overflow-hidden border border-border group"
               >
-                <Image src={offer.image} alt={offer.title} fill sizes="(max-width: 768px) 100vw, 50vw" loading="lazy" className="object-cover transition-transform duration-700 group-hover:scale-110" />
+                <LazyImage src={offer.image} alt={offer.title} fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover transition-transform duration-700 group-hover:scale-110" />
                 <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/70 to-transparent p-6 flex flex-col justify-center">
                   <h3 className="text-2xl font-bold text-primary mb-2 shadow-sm drop-shadow-md">{offer.title}</h3>
                   <p className="text-muted-foreground font-medium drop-shadow-md max-w-[70%]">{offer.description}</p>
@@ -232,14 +235,14 @@ export default function HomePage() {
                   <Link href={`/menu/${item.categoryId}`} className="block w-full">
                   <div className="bg-card border border-border rounded-3xl overflow-hidden shadow-lg group hover:border-primary/50 transition-colors">
                     <div className="relative h-48 bg-muted">
-                      <Image src={item.image} alt={item.name} fill sizes="280px" loading="lazy" className="object-cover transition-transform duration-500 group-hover:scale-105" />
+                      <LazyImage src={item.image} alt={item.name} fill sizes="280px" className="object-cover transition-transform duration-500 group-hover:scale-105" />
                     </div>
                     <div className="p-5">
                       <h3 className="font-bold text-xl mb-1">{item.name}</h3>
                       {features.showDescription && item.description && (
                         <p className="text-sm text-muted-foreground mb-2 line-clamp-1">{item.description}</p>
                       )}
-                      <p className="text-primary font-semibold text-lg tracking-wide font-sans tabular-nums">{clientData.currency} {Number(item.pricing.type === "single" ? item.pricing.price : item.pricing.options[0].price).toLocaleString("en-LK", {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
+                      <p className="text-primary font-semibold text-lg tracking-wide font-sans tabular-nums whitespace-nowrap">{clientData.currency} {Number(item.pricing.type === "single" ? item.pricing.price : item.pricing.options[0].price).toLocaleString("en-LK", {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
                     </div>
                   </div>
                   </Link>
@@ -270,7 +273,7 @@ export default function HomePage() {
                     onClick={() => openGallery(idx % gallery.length)}
                     className="relative w-64 h-40 md:w-72 md:h-44 rounded-2xl overflow-hidden shrink-0 shadow-lg cursor-pointer group"
                   >
-                    <Image src={src} alt="Ambience" fill sizes="288px" loading="lazy" className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                    <LazyImage src={src} alt="Ambience" fill sizes="288px" className="object-cover group-hover:scale-105 transition-transform duration-500" />
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
                       <span className="opacity-0 group-hover:opacity-100 text-white font-semibold transition-opacity bg-black/50 px-4 py-2 rounded-full backdrop-blur-sm">View Full</span>
                     </div>

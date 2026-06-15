@@ -35,11 +35,19 @@ export async function GET() {
     }));
 
     // Normalize foods — map _id to id
-    const safeFoods = foods.map(f => ({
-      ...f,
-      id: f._id?.toString(),
-      _id: f._id?.toString(),
-    }));
+    const safeFoods = foods.map(f => {
+      const normalized = {
+        ...f,
+        id: f._id?.toString(),
+        _id: f._id?.toString(),
+      };
+      if (normalized.pricing && normalized.pricing.type === "multi" && Array.isArray(normalized.pricing.options)) {
+        normalized.pricing.options = normalized.pricing.options.filter(
+          opt => opt && opt.price !== null && opt.price !== undefined && opt.price !== "" && Number(opt.price) > 0
+        );
+      }
+      return normalized;
+    });
 
     // Normalize offers — map _id to id
     const safeOffers = offers.map(o => ({
@@ -60,6 +68,22 @@ export async function GET() {
     const socialMedia = { ...fallback.socialMedia, ...(s.socialMedia || {}) };
     const features = { ...{ showGallery: true, showOffers: true, enableWhatsappOrder: true, showItemImages: true, showSocialMedia: true, showMap: true, showDescription: true, showPopularPicks: true }, ...(s.features || {}) };
 
+    const rawItems = safeFoods.length > 0 ? safeFoods : fallback.items || [];
+    const cleanedItems = rawItems.map(item => {
+      if (item.pricing && item.pricing.type === "multi" && Array.isArray(item.pricing.options)) {
+        return {
+          ...item,
+          pricing: {
+            ...item.pricing,
+            options: item.pricing.options.filter(
+              opt => opt && opt.price !== null && opt.price !== undefined && opt.price !== "" && Number(opt.price) > 0
+            )
+          }
+        };
+      }
+      return item;
+    });
+
     const responseData = {
       restaurantInfo: {
         name: s.restaurantName || fallback.restaurantInfo?.name || "FIGARO",
@@ -77,7 +101,7 @@ export async function GET() {
       currency: fallback.currency || "LKR",
       serviceCharge: s.serviceCharge ?? 5,
       categories: safeCategories.length > 0 ? safeCategories : fallback.categories || [],
-      items: safeFoods.length > 0 ? safeFoods : fallback.items || [],
+      items: cleanedItems,
       offers: safeOffers.length > 0 ? safeOffers : fallback.offers || [],
       gallery: gallery.length > 0 ? gallery : fallback.gallery || [],
     };

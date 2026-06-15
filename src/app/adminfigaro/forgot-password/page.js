@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import { Loader2, Mail } from "lucide-react";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import Link from "next/link";
 import { useData } from "@/context/DataContext";
 
@@ -134,8 +133,6 @@ export default function ForgotPasswordPage() {
           </p>
         </div>
       </div>
-
-      <ToastContainer theme="dark" position="top-right" autoClose={3000} />
     </div>
   );
 }

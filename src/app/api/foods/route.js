@@ -1,6 +1,7 @@
 import { auth } from "@/lib/auth";
 import { connectDB } from "@/lib/mongodb";
 import Food from "@/models/Food";
+import ImageHash from "@/models/ImageHash";
 import { NextResponse } from "next/server";
 import { clientData } from "@/data/clientData";
 
@@ -22,7 +23,7 @@ export async function GET(req) {
     }
 
     const foods = await Food.find(query)
-      .select("_id name description categoryId image featured pricing createdAt")
+      .select("_id name description categoryId image imagePublicId featured pricing createdAt")
       .sort({ createdAt: -1 });
 
     return NextResponse.json({ success: true, foods });
@@ -45,6 +46,7 @@ export async function POST(req) {
       name, 
       description, 
       image, 
+      imagePublicId,
       categoryId, 
       featured, 
       pricing 
@@ -55,11 +57,21 @@ export async function POST(req) {
     }
 
     await connectDB();
+
+    // Fallback lookup of publicId by image URL if not passed by client
+    let finalImagePublicId = imagePublicId || "";
+    if (image && !finalImagePublicId) {
+      const imgHashRec = await ImageHash.findOne({ url: image });
+      if (imgHashRec) {
+        finalImagePublicId = imgHashRec.publicId;
+      }
+    }
     
     const newFood = await Food.create({
       name,
       description: description || "",
       image: image || "",
+      imagePublicId: finalImagePublicId,
       categoryId,
       featured: !!featured,
       pricing,

@@ -99,7 +99,22 @@ export function DataProvider({ children }) {
         const rawItems = dbData?.items || dbData?.foods;
         if (rawItems) {
           const safeItems = normalizeArray(rawItems, "items");
-          if (safeItems.length > 0) merged.items = safeItems;
+          if (safeItems.length > 0) {
+            merged.items = safeItems.map(item => {
+              if (item.pricing && item.pricing.type === "multi" && Array.isArray(item.pricing.options)) {
+                return {
+                  ...item,
+                  pricing: {
+                    ...item.pricing,
+                    options: item.pricing.options.filter(
+                      opt => opt && opt.price !== null && opt.price !== undefined && opt.price !== "" && Number(opt.price) > 0
+                    )
+                  }
+                };
+              }
+              return item;
+            });
+          }
         }
 
         if (typeof window !== "undefined") {

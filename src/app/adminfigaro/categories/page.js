@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import LazyImage from "@/components/LazyImage";
 import { 
   Plus, 
   Search, 
@@ -201,9 +202,9 @@ export default function CategoriesPage() {
                 filteredCategories.map((category) => (
                   <tr key={category._id} className="hover:bg-zinc-800/30 transition-colors group">
                     <td className="px-6 py-4">
-                      <div className="w-12 h-12 rounded-xl overflow-hidden bg-zinc-800 border border-zinc-700 flex items-center justify-center">
+                      <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-zinc-800 border border-zinc-700 flex items-center justify-center">
                         {category.image ? (
-                          <img src={category.image} alt={category.name} className="w-full h-full object-cover" />
+                          <LazyImage src={category.image} alt={category.name} fill className="object-cover" sizes="48px" />
                         ) : (
                           <ImageIcon className="text-zinc-600" size={20} />
                         )}
