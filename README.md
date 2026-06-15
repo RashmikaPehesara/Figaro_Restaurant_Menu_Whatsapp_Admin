@@ -2,7 +2,7 @@
 
 ## 🚀 Live Demo
 
-👉 https://figaro-restaurant-menu.vercel.app/
+👉 https://figaro-restaurant-menu-whatsapp-adm.vercel.app/
 
 ---
 
